@@ -187,6 +187,7 @@ The corresponding id are;
 [33, 39, 14, 25, 26]
 
 For the fifth image, the model is sure that this is "Right-of-way at the next intersection" (feature ID #11). The top five soft max probabilities were;
+
 [  9.98846531e-01,   1.13800517e-03,   6.10513507e-06, 2.74995318e-06,   1.66726454e-06]
 
 The corresponding id are;
