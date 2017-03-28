@@ -30,7 +30,7 @@ The goals / steps of this project are the following:
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/kotaroh/SelfDriving_CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ###Data Set Summary & Exploration
 
@@ -71,99 +71,104 @@ As a last step, I normalized the image data to reduce the distribution of data f
 
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. 
 
-The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook. One batch includes 256 images, and 20 epochs are used for training. The datas are shuffled with shuffle in sklearn.utils later in the traning phase.
+The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook. Training data is shuffled with shuffle in sklearn.utils later in the traning phase.
 
 To cross validate my model,the separate validation data is used. Also same number of images are used for validation.
 
 ####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-The code for my final model is located in the seventh cell of the ipython notebook. 
+The code for my final model is located in the fifth cell of the ipython notebook. 
 
 My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x1 Grayscale image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| Convolution 2D     	| 1x1 stride, valid padding, Input = 32x32x1. Output = 28x28x6	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
- 
+| Dropout					|		Keep probability 85% for training|
+| Max pooling	      	| 2x2 stride, Input = 28x28x6. Output = 14x14x6|
+| Convolution 2D     	| 1x1 stride, valid padding, Output = 10x10x16|
+| RELU					|												|
+| Dropout					|		Keep probability 85% for training|
+| Max pooling	      	| 2x2 stride, Input = 10x10x16. Output = 5x5x16|
+| Flatten|Input = 5x5x16. Output = 400|
+| Fully Connected	| Input = 400. Output = 120|
+| RELU					|												|
+| Dropout					|		Keep probability 85% for training|
+| Fully Connected	| Input = 120. Output = 84|
+| RELU					|												|
+| Dropout					|		Keep probability 85% for training|
+| Fully Connected	| Input = 84. Output = 43|
 
 
 ####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-The code for training the model is located in the eigth cell of the ipython notebook. 
+The code for training the model is located in the sixth cell of the ipython notebook. 
 
-To train the model, I used an ....
+To train the model, I used softmax and cross entropy as cost function, and used Adam optimizer as optimizer for training.
+
+* learning rate 0.01
+* One batch includes 256 images
+* 20 epochs
 
 ####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
+The code for calculating the accuracy of the model is located in the sixth cell of the Ipython notebook.
 
-My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+Validation set accuracy as my final model results is  0.946
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+The first architecture I tried was LeNet implemented in the last lesson. The target image size is the same and the only difference was the number of features as the result of prediction. By using grayscaled data, the depth of input data was also the same. There were multiple problems I encountered.
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+* The first problem was that the validation accuracy was just about 0.05 or so. After a long investigation, it eas found that value of tf.truncated_normal is too high and  neurons are getting too saturated. By setting up the initial value to 0.1 instead of the default value of 1.0, the accuracy increased dramatically and reached to about 85%.
+* At that point, the number of epoch and batch size are set to 10 and 128 respectively. However, the validation process after the training shows that the accuracy did not seem to be saturated. I tried to increase both the number of epoch and batch size and confirmed that the accuracy could be increased to around 0.89.
+* To get a higher accuracy, then I introduced dropout layers to the model. Originally keep-probability rate was around 0.5, which did not work very well. I updated it to 0.85 and confirmed we can improve the accuracy by setting this number. It helped the model to increase the accuracy during the whole validation execution process and the model was able to get the accuracy rate 0f 0.946, which is higher than 0.93. 
 
 ###Test a Model on New Images
 
 ####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are five German traffic signs that I found from the test data set downloaded from the web:
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
 
-The first image might be difficult to classify because ...
-
 ####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
+The code for making predictions on my final model is located in the eighth cell of the Ipython notebook.
 
 Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Vehicles over 3.5 metric tons prohibited    		| Vehicles over 3.5 metric tons prohibited									| 
+| Speed limit (30km/h)    			| Speed limit (30km/h)							|
+| Keep right		| Keep right								|
+| Turn right ahead      		| Turn right ahead				 				|
+|  Right-of-way at the next intersection		|  Right-of-way at the next intersection 							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. 
 
 ####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+The code for making predictions on my final model is located in the nineth cell of the Ipython notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+For the first image, the model is sure that this is "a Vehicles over 3.5 metric tons prohibited " (feature ID #16). The top five soft max probabilities were;
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+[9.99995351e-01, 3.45095236e-06,1.04681817e-06, 9.70486838e-08, 2.63701416e-08]
+The corresponding id are;
+[16,  9, 40,  7, 41]
 
+For the second image, the model is sure that this is "Speed limit (30km/h) " (feature ID #1). The top five soft max probabilities were;
 
-For the second image ... 
+[  9.99641895e-01,   2.93747173e-04,   4.01445614e-05, 1.36849940e-05,   1.02294698e-05]
+The corresponding id are;
+[1, 2, 0, 5, 4]
+
+For the third image, the model is sure that this is "Keep right	" (feature ID #38). The top five soft max probabilities were;
+
+[  9.99641895e-01,   2.93747173e-04,   4.01445614e-05, 1.36849940e-05,   1.02294698e-05]
+The corresponding id are;
+[1, 2, 0, 5, 4]
+
