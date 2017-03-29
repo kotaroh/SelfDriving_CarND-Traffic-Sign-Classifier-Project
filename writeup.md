@@ -139,13 +139,13 @@ The code for making predictions on my final model is located in the eighth cell 
 
 Here are the results of the prediction:
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Vehicles over 3.5 metric tons prohibited    		| Vehicles over 3.5 metric tons prohibited									| 
-| Speed limit (30km/h)    			| Speed limit (30km/h)							|
-| Keep right		| Keep right								|
-| Turn right ahead      		| Turn right ahead				 				|
-|  Right-of-way at the next intersection		|  Right-of-way at the next intersection 							|
+| Image			        |     Prediction	        					|Difficulty|
+|:---------------------:|:---------------------------------------------:|:----:|
+| Vehicles over 3.5 metric tons prohibited    		| Vehicles over 3.5 metric tons prohibited|Easy.| 
+| Speed limit (30km/h)    			| Speed limit (30km/h)|Easy, but objects around the sign might impact the recognition.|
+| Keep right		| Keep right|Easy.|
+| Turn right ahead| Turn right ahead|This could be a little difficult, because the background has a lot of noise and the sign itself is relatively small|
+|  Right-of-way at the next intersection|Right-of-way at the next intersection|This seem to be easy, but might be hard for recognition since the contrast is low.|
 
 
 The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. 
@@ -158,7 +158,7 @@ For the first image, the model is sure that this is "a Vehicles over 3.5 metric 
 
 [9.99995351e-01, 3.45095236e-06,1.04681817e-06, 9.70486838e-08, 2.63701416e-08]
 
-The corresponding id are;
+The corresponding ids were;
 
 [16,  9, 40,  7, 41]
 
@@ -166,7 +166,7 @@ For the second image, the model is sure that this is "Speed limit (30km/h) " (fe
 
 [  9.99641895e-01,   2.93747173e-04,   4.01445614e-05, 1.36849940e-05,   1.02294698e-05]
 
-The corresponding id are;
+The corresponding ids were;
 
 [1, 2, 0, 5, 4]
 
@@ -174,7 +174,7 @@ For the third image, the model is sure that this is "Keep right	" (feature ID #3
 
 [  1.00000000e+00,   3.40164116e-12,   5.29262398e-13, 7.74095076e-14,   1.65949223e-15]
 
-The corresponding id are;
+The corresponding ids were;
 
 [38, 34, 20, 36, 41]
 
@@ -182,7 +182,7 @@ For the forth image, the model is sure that this is " Turn right ahead" (feature
 
 [  9.99944091e-01,   3.48959329e-05,   1.53915425e-05,  4.47434468e-06,   4.92537367e-07]
 
-The corresponding id are;
+The corresponding ids were;
 
 [33, 39, 14, 25, 26]
 
@@ -190,6 +190,6 @@ For the fifth image, the model is sure that this is "Right-of-way at the next in
 
 [  9.98846531e-01,   1.13800517e-03,   6.10513507e-06, 2.74995318e-06,   1.66726454e-06]
 
-The corresponding id are;
+The corresponding ids were;
 
 [11, 30, 27, 40, 21]
